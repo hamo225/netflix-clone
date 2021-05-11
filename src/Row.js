@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "./axios";
+import "./Row.css";
 
 const baseurl = "https://image.tmdb.org/t/p/original";
 
-function Row({ title, fetchUrl }) {
+function Row({ title, fetchUrl, isLargeRow }) {
   //   state is like short term memory that disapears on refresh
   //   state syntax, the name, the set name and set to usestate with an initial value of an empty array
   const [movies, setMovies] = useState([]);
@@ -23,7 +24,7 @@ function Row({ title, fetchUrl }) {
     fetchData();
   }, [fetchUrl]);
 
-  console.log(movies);
+  // console.log(movies);
   // when using useEffect - if we are using a variable from outside the block than we MUST pass it as a dependency
   //   if dependenice blank. then run once when row loads and do not run again. If we were to pass in a variable then it will reload once that dependencie changes
 
@@ -33,14 +34,16 @@ function Row({ title, fetchUrl }) {
       <h2>{title}</h2>
       <div className="row__posters">
         {/* many row__poster(s) */}
-        {movies.map((movie, i) => (
+        {movies.map((movie) => (
           <img
-            className="row__poster"
-            src={`
-              ${baseurl}${movie.poster_path}
+            // using the same component - we add a conditional
+            className={`row__poster ${isLargeRow && "row__posterLarge"}`}
+            //  adding conditionals
+            src={` 
+              ${baseurl}${isLargeRow ? movie.poster_path : movie.backdrop_path}
             `}
             alt={`${baseurl}  ${movie.name} `}
-            key={i}
+            key={movie.id}
           />
         ))}
       </div>
